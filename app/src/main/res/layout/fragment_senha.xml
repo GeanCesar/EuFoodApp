@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:fitsSystemWindows="true"
+    tools:context=".MainActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="10dp">
+
+        <EditText
+            android:id="@+id/etSenha"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/rounded_edittext"
+            android:ems="10"
+            android:hint="Senha"
+            android:inputType="textPassword"
+            android:paddingLeft="25dp"
+            android:paddingTop="13dp"
+            android:paddingRight="25dp"
+            android:paddingBottom="13dp"
+            android:textColor="@color/cor_texto"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:id="@+id/llForcaSenha"
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:layout_marginTop="20dp"
+            android:orientation="horizontal"
+            android:textAlignment="viewEnd">
+
+            <TextView
+                android:id="@+id/textView6"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center|right"
+                android:paddingRight="5dp"
+                android:text="Força da senha"
+                android:textColor="@android:color/darker_gray" />
+
+            <TextView
+                android:id="@+id/tvVermelhoForca"
+                android:layout_width="15dp"
+                android:layout_height="match_parent"
+                android:layout_marginRight="3dp"
+                android:alpha="0.2"
+                android:background="@drawable/rounded_forca_nivel_vermelho" />
+
+            <TextView
+                android:id="@+id/tvAmareloForca"
+                android:layout_width="15dp"
+                android:layout_height="match_parent"
+                android:layout_marginRight="3dp"
+                android:alpha="0.2"
+                android:background="@drawable/rounded_forca_nivel_amarelo" />
+
+            <TextView
+                android:id="@+id/tvVerdeForca"
+                android:layout_width="15dp"
+                android:layout_height="match_parent"
+                android:layout_marginRight="3dp"
+                android:alpha="0.2"
+                android:background="@drawable/rounded_forca_nivel_verde" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal">
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btConcluirCadastro"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_weight="1"
+                android:background="@drawable/rounded_botao_primario"
+                android:text="Concluir"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                app:cornerRadius="5dp" />
+        </LinearLayout>
+    </LinearLayout>
+
+</RelativeLayout>
