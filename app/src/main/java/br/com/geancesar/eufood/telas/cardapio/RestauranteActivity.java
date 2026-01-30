@@ -9,11 +9,14 @@ import android.os.Looper;
 import android.util.Base64;
 import android.view.Gravity;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -29,6 +32,7 @@ import java.util.stream.Collectors;
 
 import br.com.geancesar.eufood.R;
 import br.com.geancesar.eufood.databinding.LayoutRestauranteBinding;
+import br.com.geancesar.eufood.telas.cardapio.fragment.DetalheItemFragment;
 import br.com.geancesar.eufood.telas.cardapio.list_item.ListItemCategoriaCardapioAdapter;
 import br.com.geancesar.eufood.telas.cardapio.listener.RestauranteListener;
 import br.com.geancesar.eufood.telas.cardapio.model.CategoriaItemCardapio;
@@ -40,7 +44,7 @@ import br.com.geancesar.eufood.telas.cardapio.requests.model.RespostaListarItens
 import br.com.geancesar.eufood.telas.dashboard.model.Restaurante;
 import br.com.geancesar.eufood.util.AccountManagerUtil;
 
-public class RestauranteActivity extends Activity implements RestauranteListener {
+public class RestauranteActivity extends AppCompatActivity implements RestauranteListener {
 
     LayoutRestauranteBinding binding;
     ImageView ivIconeRestaurante;
@@ -51,11 +55,16 @@ public class RestauranteActivity extends Activity implements RestauranteListener
 
     CardView cvSacola;
 
+    CardView cvDetalheItem;
+
+    FrameLayout flDetalheItem;
+
     Restaurante restaurante;
     List<ItemCardapio> itensCardapio = new ArrayList<>();
     List<CategoriaItemCardapio> categorias = new ArrayList<>();
 
     SlideUp slideUp;
+    SlideUp slideUpDetalheItem;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -70,12 +79,19 @@ public class RestauranteActivity extends Activity implements RestauranteListener
         tvNomeRestaurante = findViewById(R.id.tvNomeRestaurante);
         rvCardapio = findViewById(R.id.rvCardapio);
         ivIconeRestaurante = findViewById(R.id.ivIconeRestaurante);
+        cvDetalheItem = findViewById(R.id.cvDetalheItem);
+        flDetalheItem = findViewById(R.id.flDetalheItem);
 
         buscarItens();
         carregaDados();
 
         cvSacola = findViewById(R.id.cvSacola);
         slideUp = new SlideUpBuilder(cvSacola)
+                .withStartState(SlideUp.State.HIDDEN)
+                .withStartGravity(Gravity.BOTTOM)
+                .build();
+
+        slideUpDetalheItem = new SlideUpBuilder(cvDetalheItem)
                 .withStartState(SlideUp.State.HIDDEN)
                 .withStartGravity(Gravity.BOTTOM)
                 .build();
@@ -147,5 +163,15 @@ public class RestauranteActivity extends Activity implements RestauranteListener
     public void listaItens(List<ItemCardapio> itens) {
         itensCardapio = itens;
         buscarCategorias();
+    }
+
+    @Override
+    public void detalheItem(ItemCardapio item) {
+        loadFragment(new DetalheItemFragment(item));
+        slideUpDetalheItem.show();
+    }
+
+    private void loadFragment(Fragment fragment) {
+        getSupportFragmentManager().beginTransaction().replace(R.id.flDetalheItem, fragment).commit();
     }
 }

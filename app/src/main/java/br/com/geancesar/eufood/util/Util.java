@@ -1,6 +1,7 @@
 package br.com.geancesar.eufood.util;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 public class Util {
 
@@ -16,7 +17,12 @@ public class Util {
     }
 
     public String formataMoeda(BigDecimal valor) {
+        valor = valor.setScale(2, RoundingMode.HALF_EVEN);
         return "R$ " + String.valueOf(valor).replace(".", ",");
+    }
+
+    public String formataMoeda(double valor) {
+        return formataMoeda(BigDecimal.valueOf(valor));
     }
 
 }

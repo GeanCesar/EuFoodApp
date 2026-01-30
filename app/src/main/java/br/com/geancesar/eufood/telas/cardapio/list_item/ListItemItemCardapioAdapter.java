@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -59,6 +60,10 @@ public class ListItemItemCardapioAdapter extends RecyclerView.Adapter<ListItemIt
         } else if(!itens.get(position).isBuscouImagem()){
             buscaImagemItem(position);
         }
+
+        holder.llItem.setOnClickListener( l -> {
+            listener.detalheItem(itens.get(position));
+        });
     }
 
     private void buscaImagemItem(int position) {
@@ -78,7 +83,9 @@ public class ListItemItemCardapioAdapter extends RecyclerView.Adapter<ListItemIt
         return itens.size();
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+
+        LinearLayout llItem;
         TextView tvNomeItemCardapio;
         TextView tvDescricaoItemCardapio;
         TextView tvPrecoItemCardapio;
@@ -86,16 +93,11 @@ public class ListItemItemCardapioAdapter extends RecyclerView.Adapter<ListItemIt
 
         ViewHolder(View itemView) {
             super(itemView);
+            llItem = itemView.findViewById(R.id.llItem);
             tvNomeItemCardapio = itemView.findViewById(R.id.tvNomeItemCardapio);
             tvDescricaoItemCardapio = itemView.findViewById(R.id.tvDescricaoItemCardapio);
             tvPrecoItemCardapio = itemView.findViewById(R.id.tvPrecoItemCardapio);
             ivIconeItemCardapio = itemView.findViewById(R.id.ivIconeItemCardapio);
-            itemView.setOnClickListener(this);
-        }
-
-        @Override
-        public void onClick(View view) {
-            //if (mClickListener != null) mClickListener.onItemClick(view, getAdapterPosition());
         }
     }
 }

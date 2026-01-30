@@ -36,8 +36,7 @@
                     <ImageView
                         android:id="@+id/ivIconeRestaurante"
                         android:layout_width="85dp"
-                        android:layout_height="85dp"
-                        app:srcCompat="@drawable/ic_launcher_background" />
+                        android:layout_height="85dp" />
                 </androidx.cardview.widget.CardView>
 
                 <TextView
@@ -128,6 +127,23 @@
                 android:textStyle="bold" />
 
         </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cvDetalheItem"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:elevation="8dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="50dp">
+
+        <FrameLayout
+            android:id="@+id/flDetalheItem"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        </FrameLayout>
 
     </androidx.cardview.widget.CardView>
 </RelativeLayout>

@@ -10,4 +10,6 @@ public interface RestauranteListener {
 
     void listaItens(List<ItemCardapio> itens);
 
+    void detalheItem(ItemCardapio item);
+
 }

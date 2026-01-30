@@ -54,6 +54,6 @@ dependencies {
     implementation libs.commons.lang3
 
     implementation "com.github.mancj:SlideUp-Android:2.2.8"
-
+    implementation files('libs/uicomponents.aar')
 }
 
