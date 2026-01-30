@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -18,6 +19,7 @@ import androidx.fragment.app.Fragment;
 import java.math.BigDecimal;
 
 import br.com.geancesar.eufood.R;
+import br.com.geancesar.eufood.telas.cardapio.listener.RestauranteListener;
 import br.com.geancesar.eufood.telas.cardapio.model.ItemCardapio;
 import br.com.geancesar.eufood.util.Util;
 import br.com.geancesar.uicomponents.componentes.NumberSelector;
@@ -31,11 +33,14 @@ public class DetalheItemFragment extends Fragment {
     ImageView ivIcone;
     Button btAdicionar;
     NumberSelector nsQuantidade;
+    LinearLayout llRecolher;
+    RestauranteListener listener;
 
     public DetalheItemFragment(){}
     
-    public DetalheItemFragment(ItemCardapio item){
+    public DetalheItemFragment(RestauranteListener listener, ItemCardapio item){
         this.item = item;
+        this.listener = listener;
     }
 
     @Nullable
@@ -47,6 +52,7 @@ public class DetalheItemFragment extends Fragment {
         ivIcone = view.findViewById(R.id.ivImagemItem);
         btAdicionar = view.findViewById(R.id.btAdicionar);
         nsQuantidade = view.findViewById(R.id.nsQuantidade);
+        llRecolher = view.findViewById(R.id.llRecolher);
 
         tvNomeItem.setText(item.getNome());
         tvDescricaoItem.setText(item.getDescricao());
@@ -70,6 +76,7 @@ public class DetalheItemFragment extends Fragment {
         });
 
         atualizaTextoBotao();
+        llRecolher.setOnClickListener(l -> listener.fecharDetalheItem());
 
         return view;
     }
