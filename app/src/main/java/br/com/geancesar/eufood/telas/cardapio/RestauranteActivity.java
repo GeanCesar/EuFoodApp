@@ -167,6 +167,7 @@ public class RestauranteActivity extends AppCompatActivity implements Restaurant
 
     @Override
     public void detalheItem(ItemCardapio item) {
+        item.setRestaurante(restaurante);
         loadFragment(new DetalheItemFragment(this, item));
         slideUpDetalheItem.show();
     }

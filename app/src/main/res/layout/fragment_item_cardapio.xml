@@ -54,29 +54,39 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:padding="15dp">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/tvNomeItem"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Nome Item"
-                android:textColor="@color/cor_texto"
-                android:textSize="18sp"
-                android:textStyle="bold" />
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:paddingLeft="15dp"
+                android:paddingTop="15dp"
+                android:paddingRight="15dp"
+                android:paddingBottom="3dp">
 
-            <TextView
-                android:id="@+id/tvDescricaoItem"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="20dp"
-                android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque non sapien nec quam ullamcorper lacinia. Aenean eget dui eget nunc porta elementum et nec neque. In vulputate ligula quis purus eleifend."
-                android:textColor="@color/cor_texto" />
+                <TextView
+                    android:id="@+id/tvNomeItem"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Nome Item"
+                    android:textColor="@color/cor_texto"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tvDescricaoItem"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="20dp"
+                    android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque non sapien nec quam ullamcorper lacinia. Aenean eget dui eget nunc porta elementum et nec neque. In vulputate ligula quis purus eleifend."
+                    android:textColor="@color/cor_texto" />
+            </LinearLayout>
 
             <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvCategorias"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginBottom="100dp" />
@@ -103,16 +113,15 @@
             app:valor="1"
             app:valor_minimo="1" />
 
-        <androidx.appcompat.widget.AppCompatButton
+        <br.com.geancesar.uicomponents.componentes.ValueButton
             android:id="@+id/btAdicionar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="5"
-            android:background="@drawable/rounded_botao_primario"
-            android:paddingLeft="30dp"
-            android:paddingRight="30dp"
-            android:text="Adicionar"
-            android:textColor="@color/white" />
+            android:layout_weight="1"
+            app:fundo_value_button="@drawable/botao_primario"
+            app:texto_value_button="Adicionar"
+            android:clickable="true"
+            />
     </LinearLayout>
 
 </RelativeLayout>
