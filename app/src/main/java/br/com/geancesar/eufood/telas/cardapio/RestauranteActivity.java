@@ -1,12 +1,8 @@
 package br.com.geancesar.eufood.telas.cardapio;
 
-import android.app.Activity;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Base64;
 import android.view.Gravity;
 import android.widget.Button;
 import android.widget.FrameLayout;
@@ -20,6 +16,9 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.model.GlideUrl;
+import com.bumptech.glide.load.model.LazyHeaders;
 import com.mancj.slideup.SlideUp;
 import com.mancj.slideup.SlideUpBuilder;
 
@@ -97,15 +96,20 @@ public class RestauranteActivity extends AppCompatActivity implements Restaurant
                 .build();
     }
 
+    private void buscaImagem() {
+        GlideUrl glideUrl = new GlideUrl("http://192.168.15.103:8080/restaurante/imagem_perfil?uuid-restaurante=" + restaurante.getUuid(), new LazyHeaders.Builder()
+                .addHeader("Authorization", "Bearer " + AccountManagerUtil.getInstance().getToken(this))
+                .build());
 
+        Glide
+                .with(this)
+                .load(glideUrl)
+                .into(ivIconeRestaurante);
+    }
 
     private void carregaDados() {
         tvNomeRestaurante.setText(restaurante.getNome());
-        if(restaurante.getImagemBaixada() != null) {
-            byte[] decodedString = Base64.decode(restaurante.getImagemBaixada(), Base64.DEFAULT);
-            Bitmap imagem = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-            ivIconeRestaurante.setImageBitmap(imagem);
-        }
+        buscaImagem();
     }
 
     private void atualizaLista(){
@@ -150,12 +154,6 @@ public class RestauranteActivity extends AppCompatActivity implements Restaurant
             categoria.setItens(categoriasComItens.get(categoria));
         }
 
-        atualizaLista();
-    }
-
-    @Override
-    public void getImagemItem(String imagemBase64, String uuid) {
-        itensCardapio.stream().filter(item -> item.getUuid().equalsIgnoreCase(uuid)).findFirst().get().setImagemBaixada(imagemBase64);
         atualizaLista();
     }
 

@@ -12,7 +12,7 @@
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/editTextText"
+        android:layout_above="@+id/etPesquisar"
         android:layout_marginBottom="15dp"
         android:background="#FFFFFF"
         android:orientation="vertical"
@@ -44,7 +44,7 @@
     </LinearLayout>
 
     <EditText
-        android:id="@+id/editTextText"
+        android:id="@+id/etPesquisar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/bottomNavigationView"

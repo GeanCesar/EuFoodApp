@@ -1,5 +1,7 @@
 package br.com.geancesar.eufood.telas.cardapio.model;
 
+import android.graphics.drawable.Drawable;
+
 import java.math.BigDecimal;
 
 import br.com.geancesar.eufood.telas.dashboard.model.Restaurante;
@@ -21,7 +23,11 @@ public class ItemCardapio {
     private CategoriaItemCardapio categoria;
 
     @Transient
-    private String imagemBaixada;
+    private Drawable imagemBaixada;
+    @Transient
+    private int quantidadeSelecionada;
+    @Transient
+    private boolean quantidadeBloqueada;
 
     private boolean buscouImagem;
 
@@ -89,11 +95,11 @@ public class ItemCardapio {
         this.buscouImagem = buscouImagem;
     }
 
-    public String getImagemBaixada() {
+    public Drawable getImagemBaixada() {
         return imagemBaixada;
     }
 
-    public void setImagemBaixada(String imagemBaixada) {
+    public void setImagemBaixada(Drawable imagemBaixada) {
         this.imagemBaixada = imagemBaixada;
     }
 
@@ -103,5 +109,21 @@ public class ItemCardapio {
 
     public CategoriaItemCardapio getCategoria() {
         return categoria;
+    }
+
+    public int getQuantidadeSelecionada() {
+        return quantidadeSelecionada;
+    }
+
+    public void setQuantidadeSelecionada(int quantidadeSelecionada) {
+        this.quantidadeSelecionada = quantidadeSelecionada;
+    }
+
+    public boolean isQuantidadeBloqueada() {
+        return quantidadeBloqueada;
+    }
+
+    public void setQuantidadeBloqueada(boolean quantidadeBloqueada) {
+        this.quantidadeBloqueada = quantidadeBloqueada;
     }
 }

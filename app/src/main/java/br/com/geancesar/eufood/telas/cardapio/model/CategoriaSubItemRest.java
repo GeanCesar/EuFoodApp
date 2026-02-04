@@ -42,4 +42,13 @@ public class CategoriaSubItemRest {
 		this.itens = itens;
 	}
 
+    public int quantidadeSelecionada(){
+        int quantidade = 0;
+        if(itens != null) {
+            for(ItemCardapio itemCardapio : itens) {
+                quantidade = quantidade + itemCardapio.getQuantidadeSelecionada();
+            }
+        }
+        return quantidade;
+    }
 }

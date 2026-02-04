@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 import br.com.geancesar.eufood.R;
+import br.com.geancesar.eufood.telas.cardapio.listener.DetalheItemListener;
 import br.com.geancesar.eufood.telas.cardapio.model.CategoriaSubItemRest;
 
 public class ListItemCategoriaSubItemAdapter extends RecyclerView.Adapter<ListItemCategoriaSubItemAdapter.ViewHolder> {
@@ -21,11 +22,13 @@ public class ListItemCategoriaSubItemAdapter extends RecyclerView.Adapter<ListIt
     List<CategoriaSubItemRest> itens;
     private LayoutInflater inflater;
     Context context;
+    DetalheItemListener listener;
 
-    public ListItemCategoriaSubItemAdapter(Context context, List<CategoriaSubItemRest> itens){
+    public ListItemCategoriaSubItemAdapter(Context context, List<CategoriaSubItemRest> itens, DetalheItemListener listener){
         this.inflater = LayoutInflater.from(context);
         this.itens = itens;
         this.context = context;
+        this.listener = listener;
     }
 
     @NonNull
@@ -39,13 +42,14 @@ public class ListItemCategoriaSubItemAdapter extends RecyclerView.Adapter<ListIt
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.tvDescricaoCategoria.setText(itens.get(position).getDescricao());
         holder.tvEscolhaAte.setText("Escolha até " + itens.get(position).getQuantidadeMaxima() + " opções");
+        holder.tvObrigatorio.setVisibility(itens.get(position).getQuantidadeMinima() > 0 ? View.VISIBLE : View.GONE);
         atualizaLista(holder, position);
     }
 
     private void atualizaLista(ListItemCategoriaSubItemAdapter.ViewHolder holder, int posicao){
         if(itens.get(posicao).getItens() != null) {
             holder.rvSubItens.setLayoutManager(new LinearLayoutManager(context));
-            holder.rvSubItens.setAdapter(new ListItemSubItemAdapter(context, itens.get(posicao).getItens(), itens.get(posicao)));
+            holder.rvSubItens.setAdapter(new ListItemSubItemAdapter(context, itens.get(posicao).getItens(), itens.get(posicao), listener));
             if(holder.rvSubItens.getAdapter() != null){
                 holder.rvSubItens.getAdapter().notifyDataSetChanged();
             }

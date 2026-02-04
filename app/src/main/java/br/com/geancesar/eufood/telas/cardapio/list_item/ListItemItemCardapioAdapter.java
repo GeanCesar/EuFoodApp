@@ -1,11 +1,7 @@
 package br.com.geancesar.eufood.telas.cardapio.list_item;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.Handler;
-import android.os.Looper;
-import android.util.Base64;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,17 +10,22 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.load.model.GlideUrl;
+import com.bumptech.glide.load.model.LazyHeaders;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
+
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import br.com.geancesar.eufood.R;
 import br.com.geancesar.eufood.telas.cardapio.listener.RestauranteListener;
 import br.com.geancesar.eufood.telas.cardapio.model.ItemCardapio;
-import br.com.geancesar.eufood.telas.cardapio.requests.CarregarImagemItemCardapioTask;
-import br.com.geancesar.eufood.request.model.RespostaRequisicao;
 import br.com.geancesar.eufood.util.AccountManagerUtil;
 import br.com.geancesar.eufood.util.Util;
 
@@ -53,29 +54,34 @@ public class ListItemItemCardapioAdapter extends RecyclerView.Adapter<ListItemIt
         holder.tvNomeItemCardapio.setText(itens.get(position).getNome());
         holder.tvPrecoItemCardapio.setText(Util.getInstance().formataMoeda(itens.get(position).getValor()));
 
-        if(itens.get(position).getImagemBaixada() != null) {
-            byte[] decodedString = Base64.decode(itens.get(position).getImagemBaixada(), Base64.DEFAULT);
-            Bitmap imagem = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-            holder.ivIconeItemCardapio.setImageBitmap(imagem);
-        } else if(!itens.get(position).isBuscouImagem()){
-            buscaImagemItem(position);
-        }
+        buscaImagemItem(holder, position);
 
         holder.llItem.setOnClickListener( l -> {
             listener.detalheItem(itens.get(position));
         });
     }
 
-    private void buscaImagemItem(int position) {
-        CarregarImagemItemCardapioTask task = new CarregarImagemItemCardapioTask(listener, itens.get(position).getUuid(), AccountManagerUtil.getInstance().getToken(inflater.getContext()));
-        itens.get(position).setBuscouImagem(true);
-        try (ExecutorService executor = Executors.newSingleThreadExecutor()) {
-            Handler handler = new Handler(Looper.getMainLooper());
-            executor.execute(() -> {
-                RespostaRequisicao resp = task.executa();
-                handler.post(() -> task.posExecucao(resp));
-            });
-        }
+    private void buscaImagemItem(ViewHolder holder, int position) {
+        GlideUrl glideUrl = new GlideUrl("http://192.168.15.103:8080/restaurante/item_cardapio/imagem_item?uuid-item-cardapio=" + itens.get(position).getUuid(), new LazyHeaders.Builder()
+                .addHeader("Authorization", "Bearer " + AccountManagerUtil.getInstance().getToken(inflater.getContext()))
+                .build());
+
+        Glide
+                .with(inflater.getContext())
+                .load(glideUrl)
+                .addListener(new RequestListener<>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                        itens.get(position).setImagemBaixada(resource);
+                        return false;
+                    }
+                })
+                .into(holder.ivIconeItemCardapio);
     }
 
     @Override

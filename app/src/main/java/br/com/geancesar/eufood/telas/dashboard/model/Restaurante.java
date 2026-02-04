@@ -1,5 +1,7 @@
 package br.com.geancesar.eufood.telas.dashboard.model;
 
+import android.graphics.drawable.Drawable;
+
 import java.io.Serializable;
 
 import kotlin.jvm.Transient;
@@ -14,7 +16,8 @@ public class Restaurante implements Serializable {
 
 	private String imagemPerfil;
 
-    private String imagemBaixada;
+    @Transient
+    private Drawable imagemBaixada;
     @Transient
     private boolean buscouImagem;
     private String imagemCapa;
@@ -52,11 +55,11 @@ public class Restaurante implements Serializable {
         return imagemPerfil;
     }
 
-    public String getImagemBaixada() {
+    public Drawable getImagemBaixada() {
         return imagemBaixada;
     }
 
-    public void setImagemBaixada(String imagemBaixada) {
+    public void setImagemBaixada(Drawable imagemBaixada) {
         this.imagemBaixada = imagemBaixada;
     }
 

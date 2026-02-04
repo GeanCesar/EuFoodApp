@@ -1,11 +1,10 @@
 package br.com.geancesar.eufood.telas.cardapio.fragment;
 
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,6 +49,8 @@ public class DetalheItemFragment extends Fragment implements DetalheItemListener
     RestauranteListener listener;
     List<CategoriaSubItemRest> itensCategoria;
 
+    boolean contemTodosObrigatorios = true;
+
     public DetalheItemFragment(){}
     
     public DetalheItemFragment(RestauranteListener listener, ItemCardapio item){
@@ -73,8 +74,7 @@ public class DetalheItemFragment extends Fragment implements DetalheItemListener
         tvDescricaoItem.setText(item.getDescricao());
 
         if(item.getImagemBaixada() != null) {
-            byte[] decodedString = Base64.decode(item.getImagemBaixada(), Base64.DEFAULT);
-            Bitmap imagem = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+            Bitmap imagem =  ((BitmapDrawable) item.getImagemBaixada()).getBitmap();
             ivIcone.setImageBitmap(imagem);
         }
 
@@ -98,6 +98,63 @@ public class DetalheItemFragment extends Fragment implements DetalheItemListener
         return view;
     }
 
+    /**
+     * Metodo reponsavel por liberar o botão de adicionar ou não, com base nos itens obrigatórios selecionados
+     */
+    private void bloqueiaDesbloqueiaBotaoAdicionar(){
+        if(contemCategoriaObrigatoria()) {
+            verificaObrigatorios(true);
+            btAdicionar.setEnabled(contemTodosObrigatorios);
+        } else {
+            verificaObrigatorios(false);
+        }
+    }
+
+    private void verificaObrigatorios(boolean precisaObrigatorio) {
+        if (itensCategoria != null) {
+            contemTodosObrigatorios = false;
+            for (CategoriaSubItemRest cat : itensCategoria) {
+                if(cat.getQuantidadeMinima() > 0) {
+                    contemTodosObrigatorios = cat.getQuantidadeMinima() <= cat.quantidadeSelecionada();
+                    if (!contemTodosObrigatorios) {
+                        break;
+                    }
+                }
+            }
+        }
+
+        if (contemTodosObrigatorios) {
+            for (CategoriaSubItemRest cat : itensCategoria) {
+                for (ItemCardapio item : cat.getItens()) {
+                    item.setQuantidadeBloqueada(true);
+                }
+            }
+            rvCategoria.getAdapter().notifyDataSetChanged();
+        } else {
+            if(!precisaObrigatorio) {
+                for (CategoriaSubItemRest cat : itensCategoria) {
+                    if(cat.getQuantidadeMaxima() == cat.quantidadeSelecionada()) {
+                        itensCategoria.stream().forEach(categoriaSubItemRest -> categoriaSubItemRest.getItens().stream().forEach(itemCardapio -> itemCardapio.setQuantidadeBloqueada(true)));
+                        rvCategoria.getAdapter().notifyDataSetChanged();
+                        return;
+                    }
+                }
+            }
+            itensCategoria.stream().forEach(categoriaSubItemRest -> categoriaSubItemRest.getItens().stream().forEach(itemCardapio -> itemCardapio.setQuantidadeBloqueada(false)));
+            rvCategoria.getAdapter().notifyDataSetChanged();
+        }
+    }
+
+    private boolean contemCategoriaObrigatoria(){
+        boolean contem = false;
+        for(CategoriaSubItemRest cat : itensCategoria) {
+            if(cat.getQuantidadeMinima() > 0){
+                return true;
+            }
+        }
+        return contem;
+    }
+
     private void buscarCategorias() {
         ListarCategoriasSubItensTask task = new ListarCategoriasSubItensTask(
                 item.getRestaurante().getUuid(),
@@ -115,18 +172,41 @@ public class DetalheItemFragment extends Fragment implements DetalheItemListener
 
     private void atualizaListaSubItens(){
         rvCategoria.setLayoutManager(new LinearLayoutManager(getContext()));
-        rvCategoria.setAdapter(new ListItemCategoriaSubItemAdapter(getContext(), itensCategoria));
+        rvCategoria.setAdapter(new ListItemCategoriaSubItemAdapter(getContext(), itensCategoria, this));
         rvCategoria.getAdapter().notifyDataSetChanged();
+        bloqueiaDesbloqueiaBotaoAdicionar();
     }
 
     private void atualizaTextoBotao(){
         double valor = nsQuantidade.getValor() * item.getValor().doubleValue();
-        btAdicionar.setValor(BigDecimal.valueOf(valor));
+
+        double valorSubItem = 0;
+        if(itensCategoria != null) {
+            for(CategoriaSubItemRest cat : itensCategoria){
+                for(ItemCardapio sub : cat.getItens()){
+                    valorSubItem = valorSubItem + (sub.getQuantidadeSelecionada() * sub.getValor().doubleValue());
+                }
+            }
+        }
+
+        btAdicionar.setValor(BigDecimal.valueOf(valor + valorSubItem));
     }
 
     @Override
     public void buscarCategoriaSubitem(List<CategoriaSubItemRest> categorias) {
         itensCategoria = categorias;
         atualizaListaSubItens();
+    }
+
+    @Override
+    public void adicionouSubItem(ItemCardapio item) {
+        bloqueiaDesbloqueiaBotaoAdicionar();
+        atualizaTextoBotao();
+    }
+
+    @Override
+    public void removeuSubItem(ItemCardapio item) {
+        bloqueiaDesbloqueiaBotaoAdicionar();
+        atualizaTextoBotao();
     }
 }

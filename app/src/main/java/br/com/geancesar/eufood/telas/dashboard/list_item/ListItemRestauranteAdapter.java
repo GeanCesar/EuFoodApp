@@ -1,9 +1,6 @@
 package br.com.geancesar.eufood.telas.dashboard.list_item;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,13 +10,15 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.model.GlideUrl;
+import com.bumptech.glide.load.model.LazyHeaders;
+
 import java.util.List;
 
 import br.com.geancesar.eufood.R;
 import br.com.geancesar.eufood.telas.dashboard.listener.DashboardListener;
 import br.com.geancesar.eufood.telas.dashboard.model.Restaurante;
-import br.com.geancesar.eufood.telas.dashboard.requests.CarregarImagemCapaRestauranteTask;
-import br.com.geancesar.eufood.telas.dashboard.requests.CarregarImagemRestauranteTask;
 import br.com.geancesar.eufood.util.AccountManagerUtil;
 
 public class ListItemRestauranteAdapter extends RecyclerView.Adapter<ListItemRestauranteAdapter.ViewHolder>  {
@@ -46,27 +45,24 @@ public class ListItemRestauranteAdapter extends RecyclerView.Adapter<ListItemRes
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.tvNomeRestaurante.setText(restaurantes.get(position).getNome());
+        buscaImagem(holder, position);
+    }
 
-        if(restaurantes.get(position).getImagemBaixada() != null) {
-            byte[] decodedString = Base64.decode(restaurantes.get(position).getImagemBaixada(), Base64.DEFAULT);
-            Bitmap imagem = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-            holder.ivIconeRestaurante.setImageBitmap(imagem);
-        } else if(!restaurantes.get(position).isBuscouImagem()){
-            CarregarImagemRestauranteTask carregarImagemTask = new CarregarImagemRestauranteTask(listener, restaurantes.get(position).getUuid(), holder, AccountManagerUtil.getInstance().getToken(inflater.getContext()));
-            carregarImagemTask.execute();
+    private void buscaImagem(ViewHolder holder, int position) {
+        GlideUrl glideUrl = new GlideUrl("http://192.168.15.103:8080/restaurante/imagem_perfil?uuid-restaurante=" + restaurantes.get(position).getUuid(), new LazyHeaders.Builder()
+                .addHeader("Authorization", "Bearer " + AccountManagerUtil.getInstance().getToken(inflater.getContext()))
+                .build());
 
-            CarregarImagemCapaRestauranteTask carregarImagemCapaTask = new CarregarImagemCapaRestauranteTask(listener, restaurantes.get(position).getUuid(), holder, AccountManagerUtil.getInstance().getToken(inflater.getContext()));
-            carregarImagemCapaTask.execute();
-
-            restaurantes.get(position).setBuscouImagem(true);
-        }
+        Glide
+                .with(inflater.getContext())
+                .load(glideUrl)
+                .into(holder.ivIconeRestaurante);
     }
 
     @Override
     public int getItemCount() {
         return restaurantes.size();
     }
-
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView tvNomeRestaurante;
@@ -87,4 +83,7 @@ public class ListItemRestauranteAdapter extends RecyclerView.Adapter<ListItemRes
         }
     }
 
+    public void setRestaurantes(List<Restaurante> restaurantes) {
+        this.restaurantes = restaurantes;
+    }
 }
