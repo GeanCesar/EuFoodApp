@@ -74,8 +74,7 @@ public class ConsultarCelularUsuarioTask extends AsyncTask  {
                 listener.cadastrar(usuario.getTelefone());
             } else {
                 if(logar) {
-                    usuario.setUuid((String) response.getExtra());
-                    listener.logar(usuario.getTelefone(), usuario.getUuid());
+                    listener.logar(usuario.getTelefone());
                     return;
                 }
                 Toast.makeText(context, "Telefone já útilizado", Toast.LENGTH_SHORT).show();

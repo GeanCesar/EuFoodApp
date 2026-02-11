@@ -7,6 +7,7 @@ import java.util.List;
 
 import br.com.geancesar.eufood.telas.dashboard.listener.DashboardListener;
 import br.com.geancesar.eufood.telas.dashboard.model.Restaurante;
+import br.com.geancesar.eufood.telas.dashboard.requests.model.RespostaListarRestaurantes;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;

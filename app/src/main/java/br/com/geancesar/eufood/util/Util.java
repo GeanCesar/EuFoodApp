@@ -2,6 +2,8 @@ package br.com.geancesar.eufood.util;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class Util {
 
@@ -14,6 +16,11 @@ public class Util {
             instance = new Util();
         }
         return instance;
+    }
+
+    public String formataData(Date data){
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        return sdf.format(data);
     }
 
     public String formataMoeda(BigDecimal valor) {

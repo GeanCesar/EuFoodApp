@@ -29,7 +29,7 @@ import br.com.geancesar.eufood.telas.dashboard.list_item.ListItemRestauranteAdap
 import br.com.geancesar.eufood.telas.dashboard.listener.DashboardListener;
 import br.com.geancesar.eufood.telas.dashboard.model.Restaurante;
 import br.com.geancesar.eufood.telas.dashboard.requests.ListarRestaurantesTask;
-import br.com.geancesar.eufood.telas.dashboard.requests.RespostaListarRestaurantes;
+import br.com.geancesar.eufood.telas.dashboard.requests.model.RespostaListarRestaurantes;
 import br.com.geancesar.eufood.util.AccountManagerUtil;
 
 public class RestaurantesFragment extends Fragment implements DashboardListener{

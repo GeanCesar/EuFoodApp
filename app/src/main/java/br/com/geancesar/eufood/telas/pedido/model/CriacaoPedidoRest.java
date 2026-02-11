@@ -8,16 +8,6 @@ public class CriacaoPedidoRest {
 
 	private String uuidRestaurante;
 
-	private String uuidUsuario;
-
-	public String getUuidUsuario() {
-		return uuidUsuario;
-	}
-
-	public void setUuidUsuario(String uuidUsuario) {
-		this.uuidUsuario = uuidUsuario;
-	}
-
 	public void setUuidRestaurante(String uuidRestaurante) {
 		this.uuidRestaurante = uuidRestaurante;
 	}

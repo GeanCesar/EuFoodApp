@@ -1,10 +1,21 @@
 <resources xmlns:tools="http://schemas.android.com/tools" xmlns:android="http://schemas.android.com/apk/res/android">
     <!-- Base application theme. -->
     <style name="Base.Theme.EuFood" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="android:textViewStyle">@style/InterTextViewStyle</item>
+        <item name="android:buttonStyle">@style/InterButtonStyle</item>
     </style>
 
     <style name="Theme.EuFood" parent="Base.Theme.EuFood">
+        <item name="android:textViewStyle">@style/InterTextViewStyle</item>
+        <item name="android:buttonStyle">@style/InterButtonStyle</item>
     </style>
+
+    <style name="InterTextViewStyle" parent="android:Widget.TextView">
+        <item name="android:fontFamily">@font/natasans</item>
+    </style>
+
+    <style name="InterButtonStyle" parent="android:Widget.Holo.Button">
+        <item name="android:fontFamily">@font/natasans</item>
+    </style>
+
 </resources>

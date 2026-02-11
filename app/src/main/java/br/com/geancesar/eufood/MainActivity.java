@@ -94,7 +94,6 @@ public class MainActivity extends AppCompatActivity implements LoginUsuarioListe
                 fragment.setListener(this);
                 fragment.setLogando(true);
                 usuarioCadastro.setTelefone(valorCampo[0]);
-                usuarioCadastro.setUuid(valorCampo[1]);
                 transaction.replace(R.id.fvCamposLogin,fragment,"Senha");
             } else {
                 usuarioCadastro.setSenha(valorCampo[0]);
@@ -125,7 +124,7 @@ public class MainActivity extends AppCompatActivity implements LoginUsuarioListe
     }
 
     @Override
-    public void logadoSucesso(RespostaRequisicao respostaRequisicao, String uuid) {
+    public void logadoSucesso(RespostaRequisicao respostaRequisicao) {
         AccountManager manager = AccountManager.get(this);
 
         Account conta = null;
@@ -135,10 +134,7 @@ public class MainActivity extends AppCompatActivity implements LoginUsuarioListe
             conta = new Account(usuarioCadastro.getTelefone(), "EuFood");
         }
 
-        usuarioCadastro.setUuid(uuid);
-
         manager.addAccountExplicitly(conta, usuarioCadastro.getSenha(), null);
-        manager.setUserData(conta, "uuid", usuarioCadastro.getUuid());
         manager.setAuthToken(conta, "token", (String) respostaRequisicao.getExtra());
 
         Intent intent = new Intent(this, PrincipalActivity.class);

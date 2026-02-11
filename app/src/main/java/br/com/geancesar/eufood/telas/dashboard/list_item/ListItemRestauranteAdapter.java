@@ -27,7 +27,7 @@ public class ListItemRestauranteAdapter extends RecyclerView.Adapter<ListItemRes
 
     private LayoutInflater inflater;
 
-    DashboardListener listener;
+    static DashboardListener listener;
 
     public ListItemRestauranteAdapter(Context context, List<Restaurante> restaurantes, DashboardListener listener) {
         this.inflater = LayoutInflater.from(context);
@@ -64,7 +64,7 @@ public class ListItemRestauranteAdapter extends RecyclerView.Adapter<ListItemRes
         return restaurantes.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView tvNomeRestaurante;
         TextView tvCategoriaRestaurante;
         ImageView ivIconeRestaurante;

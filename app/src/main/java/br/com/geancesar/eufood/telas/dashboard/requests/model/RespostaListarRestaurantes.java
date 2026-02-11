@@ -1,4 +1,4 @@
-package br.com.geancesar.eufood.telas.dashboard.requests;
+package br.com.geancesar.eufood.telas.dashboard.requests.model;
 
 import java.util.List;
 

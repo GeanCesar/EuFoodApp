@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import br.com.geancesar.eufood.R;
 import br.com.geancesar.eufood.databinding.ActivityPrincipalBinding;
+import br.com.geancesar.eufood.telas.dashboard.fragment.PedidosFragment;
 import br.com.geancesar.eufood.telas.dashboard.fragment.RestaurantesFragment;
 
 public class PrincipalActivity extends AppCompatActivity {
@@ -44,7 +45,7 @@ public class PrincipalActivity extends AppCompatActivity {
 
     private void fragmentPedidos(){
         FragmentManager manager = getFragmentManager();
-        manager.beginTransaction().replace(R.id.flConteudoDashboard, new Fragment()).commit();
+        manager.beginTransaction().replace(R.id.flConteudoDashboard, new PedidosFragment()).commit();
     }
 
 

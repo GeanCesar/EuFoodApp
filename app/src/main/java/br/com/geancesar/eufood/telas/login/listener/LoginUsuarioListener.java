@@ -9,7 +9,7 @@ public interface LoginUsuarioListener {
     void logar(String... valorCampo);
 
     void cadastradoSucesso(RespostaRequisicao respostaRequisicao);
-    void logadoSucesso(RespostaRequisicao respostaRequisicao, String uuid);
+    void logadoSucesso(RespostaRequisicao respostaRequisicao);
 
 
 }

@@ -126,7 +126,6 @@ public class RestauranteActivity extends AppCompatActivity implements Restaurant
     private CriacaoPedidoRest getPedidoRest() {
         CriacaoPedidoRest pedidoRest = new CriacaoPedidoRest();
         pedidoRest.setUuidRestaurante(restaurante.getUuid());
-        pedidoRest.setUuidUsuario(AccountManagerUtil.getInstance().getUuid(this));
         pedidoRest.setItems(itensAdicionados);
 
         return pedidoRest;

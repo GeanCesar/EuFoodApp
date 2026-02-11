@@ -35,7 +35,7 @@
                 android:layout_weight="1"
                 android:text="Escolha até X opções"
                 android:textColor="@color/cor_texto"
-                android:textSize="12sp" />
+                android:textSize="13sp" />
 
             <TextView
                 android:id="@+id/tvObrigatorio"

@@ -56,7 +56,7 @@ public class LoginUsuarioTask  {
         if(resp == null || !resp.isOk()) {
             Toast.makeText(dialog.getContext(), "Telefone / senha incorretos", Toast.LENGTH_SHORT).show();
         } else {
-            listener.logadoSucesso(resp, usuario.getUuid());
+            listener.logadoSucesso(resp);
         }
     }
 }
