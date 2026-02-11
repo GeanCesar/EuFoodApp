@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="10dp"
+        android:clickable="false"
+        android:orientation="horizontal"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:paddingBottom="2dp">
+
+        <ImageView
+            android:id="@+id/ivIconeItemCardapio"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_marginRight="5dp"
+            android:clickable="false"
+            android:elevation="0dp"
+            android:scaleType="fitCenter" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:layout_weight="1"
+                android:clickable="false"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tvNomeItemCardapio"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:clickable="false"
+                    android:text="Nome prato"
+                    android:textColor="@color/cor_texto"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tvDescricaoItemCardapio"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dp"
+                    android:clickable="false"
+                    android:ellipsize="end"
+                    android:maxLines="2"
+                    android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum est libero, rhoncus et accumsan nec, malesuada dignissim est. Nullam elementum efficitur turpis, a tristique justo consequat nec. Donec malesuada tellus et odio hendrerit, non feugiat ipsum laoreet. Mauris condimentum, sapien vitae ultrices bibendum, enim eros aliquet velit, ac tempor orci massa vitae felis. Morbi ac magna in leo tristique efficitur. Suspendisse consequat nibh in mauris pulvinar tristique."
+                    android:textColor="@color/cor_texto" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:clickable="false"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/tvPrecoItemCardapio"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:clickable="false"
+                        android:text="R$ 00,00"
+                        android:textColor="@color/cor_texto"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tvPrecoPrePromocaoItemCardapio"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:clickable="false"
+                        android:text="TextView"
+                        android:textColor="@android:color/darker_gray"
+                        android:textStyle="italic"
+                        android:visibility="gone" />
+
+                </LinearLayout>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvSubItem"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+            </LinearLayout>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_weight="1"
+                android:gravity="center_vertical">
+
+                <br.com.geancesar.uicomponents.componentes.NumberSelector
+                    android:id="@+id/nsQuantidade"
+                    android:layout_width="220dp"
+                    android:layout_height="40dp"
+                    android:layout_alignParentTop="false"
+                    android:layout_alignParentBottom="false"
+                    app:valor="1"
+                    app:valor_minimo="1"/>
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="10dp"
+        android:background="#EFEFEF"
+        android:clickable="false"
+        android:orientation="vertical" />
+</LinearLayout>

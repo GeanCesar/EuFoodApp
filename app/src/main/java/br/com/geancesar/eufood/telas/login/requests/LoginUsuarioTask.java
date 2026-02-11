@@ -7,9 +7,9 @@ import com.google.gson.Gson;
 
 import java.io.IOException;
 
+import br.com.geancesar.eufood.request.model.RespostaRequisicao;
 import br.com.geancesar.eufood.telas.login.listener.LoginUsuarioListener;
 import br.com.geancesar.eufood.telas.login.model.Usuario;
-import br.com.geancesar.eufood.request.model.RespostaRequisicao;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -26,8 +26,10 @@ public class LoginUsuarioTask  {
     private String url = "http://192.168.15.103:8080/usuario_login/login";
     private ProgressDialog dialog;
     private LoginUsuarioListener listener;
+    Usuario usuario;
 
     public LoginUsuarioTask(Usuario usuario, ProgressDialog dialog, LoginUsuarioListener listener){
+        this.usuario = usuario;
         Gson gson = new Gson();
         json = gson.toJson(usuario);
 
@@ -54,7 +56,7 @@ public class LoginUsuarioTask  {
         if(resp == null || !resp.isOk()) {
             Toast.makeText(dialog.getContext(), "Telefone / senha incorretos", Toast.LENGTH_SHORT).show();
         } else {
-            listener.logadoSucesso(resp);
+            listener.logadoSucesso(resp, usuario.getUuid());
         }
     }
 }

@@ -4,12 +4,12 @@ import br.com.geancesar.eufood.request.model.RespostaRequisicao;
 
 public interface LoginUsuarioListener {
 
-    void avancar(String valorCampo);
+    void avancar(String... valorCampo);
     void cadastrar(String valorCampo);
-    void logar(String valorCampo);
+    void logar(String... valorCampo);
 
     void cadastradoSucesso(RespostaRequisicao respostaRequisicao);
-    void logadoSucesso(RespostaRequisicao respostaRequisicao);
+    void logadoSucesso(RespostaRequisicao respostaRequisicao, String uuid);
 
 
 }

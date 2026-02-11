@@ -9,6 +9,7 @@ import com.google.gson.Gson;
 
 import java.io.IOException;
 
+import br.com.geancesar.eufood.request.model.RespostaRequisicao;
 import br.com.geancesar.eufood.telas.login.listener.LoginUsuarioListener;
 import br.com.geancesar.eufood.telas.login.model.Usuario;
 import okhttp3.MediaType;
@@ -49,7 +50,9 @@ public class ConsultarCelularUsuarioTask extends AsyncTask  {
                 .method("POST", body)
                 .build();
         try (Response response = client.newCall(request).execute()) {
-            return response;
+            gson = new Gson();
+            RespostaRequisicao resp = gson.fromJson(response.body().string(), RespostaRequisicao.class);
+            return resp;
         } catch (IOException e) {
             return null;
         }
@@ -61,9 +64,9 @@ public class ConsultarCelularUsuarioTask extends AsyncTask  {
         dialog.dismiss();
 
         if(o != null) {
-            Response response = (Response) o;
+            RespostaRequisicao response = (RespostaRequisicao) o;
 
-            if(response.code() != 302) {
+            if(!response.isOk()) {
                 if(logar){
                     Toast.makeText(context, "Telefone não localizado", Toast.LENGTH_SHORT).show();
                     return;
@@ -71,7 +74,8 @@ public class ConsultarCelularUsuarioTask extends AsyncTask  {
                 listener.cadastrar(usuario.getTelefone());
             } else {
                 if(logar) {
-                    listener.logar(usuario.getTelefone());
+                    usuario.setUuid((String) response.getExtra());
+                    listener.logar(usuario.getTelefone(), usuario.getUuid());
                     return;
                 }
                 Toast.makeText(context, "Telefone já útilizado", Toast.LENGTH_SHORT).show();

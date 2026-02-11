@@ -21,4 +21,10 @@ public class AccountManagerUtil {
         Account account = manager.getAccounts()[0];
         return manager.peekAuthToken(account, "token");
     }
+
+    public String getUuid(Context context){
+        AccountManager manager = AccountManager.get(context);
+        Account account = manager.getAccounts()[0];
+        return manager.getUserData(account, "uuid");
+    }
 }

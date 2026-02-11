@@ -5,76 +5,32 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#F3F3F3"
-    tools:context=".telas.dashboard.PrincipalActivity">
-
+    tools:context=".telas.dashboard.fragment.RestaurantesFragment">
 
     <LinearLayout
-        android:id="@+id/linearLayout"
+        android:id="@+id/lvConteudoDashboard"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/etPesquisar"
-        android:layout_marginBottom="15dp"
-        android:background="#FFFFFF"
-        android:orientation="vertical"
-        android:paddingLeft="10dp"
-        android:paddingTop="55dp"
-        android:paddingRight="10dp">
+        android:layout_alignParentTop="true"
+        android:layout_marginBottom="110dp"
+        android:elevation="0dp">
 
-        <TextView
-            android:id="@+id/textView"
+        <FrameLayout
+            android:id="@+id/flConteudoDashboard"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="17dp"
-            android:text="Restaurantes"
-            android:textColor="@color/cor_texto"
-            android:textSize="18sp"
-            android:textStyle="bold" />
-
-        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-            android:id="@+id/srRestaurantes"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rvRestaurantes"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-
-        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+            android:layout_height="match_parent" />
     </LinearLayout>
-
-    <EditText
-        android:id="@+id/etPesquisar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/bottomNavigationView"
-        android:layout_marginLeft="14dp"
-        android:layout_marginRight="14dp"
-        android:layout_marginBottom="15dp"
-        android:background="@drawable/rounded_edittext"
-        android:drawableLeft="@drawable/ic_search"
-        android:drawablePadding="10dp"
-        android:ems="10"
-        android:hint="Pesquisar restaurante"
-        android:inputType="text"
-        android:paddingLeft="20dp"
-        android:paddingTop="14dp"
-        android:paddingRight="20dp"
-        android:paddingBottom="14dp"
-        android:textColor="@color/cor_texto"
-        android:textSize="15sp"
-        android:textStyle="bold" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="2dp"
-        android:layout_above="@+id/bottomNavigationView"
+        android:layout_above="@+id/nvMenu"
         android:layout_marginBottom="1dp"
         android:background="@color/cor_secundaria"
         android:orientation="vertical"></LinearLayout>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bottomNavigationView"
+        android:id="@+id/nvMenu"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"

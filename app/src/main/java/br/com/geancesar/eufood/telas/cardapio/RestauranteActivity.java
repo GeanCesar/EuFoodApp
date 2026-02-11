@@ -1,27 +1,31 @@
 package br.com.geancesar.eufood.telas.cardapio;
 
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.Gravity;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.load.model.LazyHeaders;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.mancj.slideup.SlideUp;
 import com.mancj.slideup.SlideUpBuilder;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -30,7 +34,7 @@ import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
 import br.com.geancesar.eufood.R;
-import br.com.geancesar.eufood.databinding.LayoutRestauranteBinding;
+import br.com.geancesar.eufood.databinding.ActivityRestauranteBinding;
 import br.com.geancesar.eufood.telas.cardapio.fragment.DetalheItemFragment;
 import br.com.geancesar.eufood.telas.cardapio.list_item.ListItemCategoriaCardapioAdapter;
 import br.com.geancesar.eufood.telas.cardapio.listener.RestauranteListener;
@@ -41,45 +45,55 @@ import br.com.geancesar.eufood.telas.cardapio.requests.ListarItensCardapioTask;
 import br.com.geancesar.eufood.telas.cardapio.requests.model.RespostaListarCategorias;
 import br.com.geancesar.eufood.telas.cardapio.requests.model.RespostaListarItensRestaurante;
 import br.com.geancesar.eufood.telas.dashboard.model.Restaurante;
+import br.com.geancesar.eufood.telas.pedido.fragment.DetalhePedidoFragment;
+import br.com.geancesar.eufood.telas.pedido.model.CriacaoPedidoItemRest;
+import br.com.geancesar.eufood.telas.pedido.model.CriacaoPedidoRest;
 import br.com.geancesar.eufood.util.AccountManagerUtil;
+import br.com.geancesar.eufood.util.Util;
 
 public class RestauranteActivity extends AppCompatActivity implements RestauranteListener {
 
-    LayoutRestauranteBinding binding;
+    ActivityRestauranteBinding binding;
+
     ImageView ivIconeRestaurante;
     TextView tvNomeRestaurante;
+    TextView tvTotalSacola;
     RecyclerView rvCardapio;
-
     Button btSacola;
-
     CardView cvSacola;
-
     CardView cvDetalheItem;
-
-    FrameLayout flDetalheItem;
+    CardView cvDetalhePedido;
 
     Restaurante restaurante;
     List<ItemCardapio> itensCardapio = new ArrayList<>();
     List<CategoriaItemCardapio> categorias = new ArrayList<>();
 
+    List<CriacaoPedidoItemRest> itensAdicionados = new ArrayList<>();
+
     SlideUp slideUp;
     SlideUp slideUpDetalheItem;
+    SlideUp slideUpDetalhePedido;
+
+    BigDecimal valorTotal = BigDecimal.ZERO;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        binding = LayoutRestauranteBinding.inflate(getLayoutInflater());
+        binding = ActivityRestauranteBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        btSacola = findViewById(R.id.btVerSacola);
+
+        btSacola = findViewById(R.id.btContinuar);
 
         restaurante = getIntent().getExtras().getSerializable("restaurante", Restaurante.class);
 
+        tvTotalSacola = findViewById(R.id.tvTotalSacola);
         tvNomeRestaurante = findViewById(R.id.tvNomeRestaurante);
         rvCardapio = findViewById(R.id.rvCardapio);
         ivIconeRestaurante = findViewById(R.id.ivIconeRestaurante);
         cvDetalheItem = findViewById(R.id.cvDetalheItem);
-        flDetalheItem = findViewById(R.id.flDetalheItem);
+        cvDetalhePedido = findViewById(R.id.cvConteudoDashboard);
 
         buscarItens();
         carregaDados();
@@ -94,6 +108,28 @@ public class RestauranteActivity extends AppCompatActivity implements Restaurant
                 .withStartState(SlideUp.State.HIDDEN)
                 .withStartGravity(Gravity.BOTTOM)
                 .build();
+
+        slideUpDetalhePedido = new SlideUpBuilder(cvDetalhePedido)
+                .withStartState(SlideUp.State.HIDDEN)
+                .withStartGravity(Gravity.BOTTOM)
+                .build();
+
+        btSacola.setOnClickListener(l -> {
+            CriacaoPedidoRest pedidoRest = getPedidoRest();
+            DetalhePedidoFragment fragment = new DetalhePedidoFragment(pedidoRest, restaurante, this);
+            getSupportFragmentManager().beginTransaction().replace(R.id.flConteudoDashboard, fragment).commit();
+
+            slideUpDetalhePedido.show();
+        });
+    }
+
+    private CriacaoPedidoRest getPedidoRest() {
+        CriacaoPedidoRest pedidoRest = new CriacaoPedidoRest();
+        pedidoRest.setUuidRestaurante(restaurante.getUuid());
+        pedidoRest.setUuidUsuario(AccountManagerUtil.getInstance().getUuid(this));
+        pedidoRest.setItems(itensAdicionados);
+
+        return pedidoRest;
     }
 
     private void buscaImagem() {
@@ -104,6 +140,18 @@ public class RestauranteActivity extends AppCompatActivity implements Restaurant
         Glide
                 .with(this)
                 .load(glideUrl)
+                .addListener(new RequestListener<>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                        restaurante.setImagemBaixada(resource);
+                        return false;
+                    }
+                })
                 .into(ivIconeRestaurante);
     }
 
@@ -166,7 +214,7 @@ public class RestauranteActivity extends AppCompatActivity implements Restaurant
     @Override
     public void detalheItem(ItemCardapio item) {
         item.setRestaurante(restaurante);
-        loadFragment(new DetalheItemFragment(this, item));
+        getSupportFragmentManager().beginTransaction().replace(R.id.flDetalheItem, new DetalheItemFragment(this, item)).commit();
         slideUpDetalheItem.show();
     }
 
@@ -175,7 +223,33 @@ public class RestauranteActivity extends AppCompatActivity implements Restaurant
         slideUpDetalheItem.hide();
     }
 
-    private void loadFragment(Fragment fragment) {
-        getSupportFragmentManager().beginTransaction().replace(R.id.flDetalheItem, fragment).commit();
+    @Override
+    public void fecharSacola() {
+        slideUpDetalhePedido.hide();
+    }
+
+    @Override
+    public void adicionarItemSacola(CriacaoPedidoItemRest item) {
+        slideUpDetalheItem.hide();
+        if(!slideUp.isVisible()){
+            slideUp.show();
+        }
+
+        itensAdicionados.add(item);
+        atualizaTotal();
+    }
+
+    @Override
+    public void pedidoGerado() {
+        finish();
+    }
+
+    private void atualizaTotal() {
+        valorTotal = BigDecimal.ZERO;
+        for(CriacaoPedidoItemRest item : itensAdicionados)  {
+            valorTotal = valorTotal.add(item.getValorTotal());
+        }
+
+        tvTotalSacola.setText(Util.getInstance().formataMoeda(valorTotal));
     }
 }

@@ -5,6 +5,7 @@ public class Usuario {
     private String nome;
     private String telefone;
     private String senha;
+    private String uuid;
 
     public String getNome() {
         return nome;
@@ -28,5 +29,13 @@ public class Usuario {
 
     public void setSenha(String senha) {
         this.senha = senha;
+    }
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
     }
 }

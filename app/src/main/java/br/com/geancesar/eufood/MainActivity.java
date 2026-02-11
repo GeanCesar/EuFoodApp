@@ -17,8 +17,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import br.com.geancesar.eufood.telas.dashboard.PrincipalActivity;
 import br.com.geancesar.eufood.databinding.ActivityMainBinding;
+import br.com.geancesar.eufood.request.model.RespostaRequisicao;
+import br.com.geancesar.eufood.telas.dashboard.PrincipalActivity;
 import br.com.geancesar.eufood.telas.login.fragments.CelularFragment;
 import br.com.geancesar.eufood.telas.login.fragments.NomeUsuarioFragment;
 import br.com.geancesar.eufood.telas.login.fragments.SenhaFragment;
@@ -26,14 +27,11 @@ import br.com.geancesar.eufood.telas.login.listener.LoginUsuarioListener;
 import br.com.geancesar.eufood.telas.login.model.Usuario;
 import br.com.geancesar.eufood.telas.login.requests.CadastrarUsuarioTask;
 import br.com.geancesar.eufood.telas.login.requests.LoginUsuarioTask;
-import br.com.geancesar.eufood.request.model.RespostaRequisicao;
 
 public class MainActivity extends AppCompatActivity implements LoginUsuarioListener {
 
     private ActivityMainBinding binding;
-
     private int telaAtualCadastro = 0;
-
     Usuario usuarioCadastro = new Usuario();
 
     private boolean cadastrando = false;
@@ -62,7 +60,7 @@ public class MainActivity extends AppCompatActivity implements LoginUsuarioListe
 
     @SuppressLint("ResourceType")
     @Override
-    public void avancar(String valorCampo) {
+    public void avancar(String... valorCampo) {
         telaAtualCadastro++;
         FragmentManager manager = getFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
@@ -75,15 +73,15 @@ public class MainActivity extends AppCompatActivity implements LoginUsuarioListe
             } else if(telaAtualCadastro == 2) {
                 NomeUsuarioFragment fragment = new NomeUsuarioFragment();
                 fragment.setListener(this);
-                usuarioCadastro.setTelefone(valorCampo);
+                usuarioCadastro.setTelefone(valorCampo[0]);
                 transaction.replace(R.id.fvCamposLogin,fragment,"Nome");
             } else if(telaAtualCadastro == 3) {
                 SenhaFragment fragment = new SenhaFragment();
                 fragment.setListener(this);
-                usuarioCadastro.setNome(valorCampo);
+                usuarioCadastro.setNome(valorCampo[0]);
                 transaction.replace(R.id.fvCamposLogin,fragment,"Senha");
             } else {
-                usuarioCadastro.setSenha(valorCampo);
+                usuarioCadastro.setSenha(valorCampo[0]);
                 efetuarCadastro();
             }
         } else {
@@ -95,10 +93,11 @@ public class MainActivity extends AppCompatActivity implements LoginUsuarioListe
                 SenhaFragment fragment = new SenhaFragment();
                 fragment.setListener(this);
                 fragment.setLogando(true);
-                usuarioCadastro.setTelefone(valorCampo);
+                usuarioCadastro.setTelefone(valorCampo[0]);
+                usuarioCadastro.setUuid(valorCampo[1]);
                 transaction.replace(R.id.fvCamposLogin,fragment,"Senha");
             } else {
-                usuarioCadastro.setSenha(valorCampo);
+                usuarioCadastro.setSenha(valorCampo[0]);
                 efetuarLogin();
             }
         }
@@ -114,7 +113,7 @@ public class MainActivity extends AppCompatActivity implements LoginUsuarioListe
     }
 
     @Override
-    public void logar(String valorCampo) {
+    public void logar(String... valorCampo) {
         cadastrando = false;
         avancar(valorCampo);
     }
@@ -126,10 +125,22 @@ public class MainActivity extends AppCompatActivity implements LoginUsuarioListe
     }
 
     @Override
-    public void logadoSucesso(RespostaRequisicao respostaRequisicao) {
+    public void logadoSucesso(RespostaRequisicao respostaRequisicao, String uuid) {
         AccountManager manager = AccountManager.get(this);
-        Account conta = manager.getAccounts()[0];
+
+        Account conta = null;
+        if(manager.getAccounts().length > 0) {
+            conta = manager.getAccounts()[0];
+        } else {
+            conta = new Account(usuarioCadastro.getTelefone(), "EuFood");
+        }
+
+        usuarioCadastro.setUuid(uuid);
+
+        manager.addAccountExplicitly(conta, usuarioCadastro.getSenha(), null);
+        manager.setUserData(conta, "uuid", usuarioCadastro.getUuid());
         manager.setAuthToken(conta, "token", (String) respostaRequisicao.getExtra());
+
         Intent intent = new Intent(this, PrincipalActivity.class);
         startActivity(intent);
     }

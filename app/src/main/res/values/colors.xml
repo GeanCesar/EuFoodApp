@@ -4,7 +4,7 @@
     <color name="black_alpha">#99000000</color>
     <color name="white">#FFFFFFFF</color>
 
-    <color name="cor_texto">#3B3B47</color>
+    <color name="cor_texto">#3c3c45</color>
     <color name="cor_primaria">#F3BC08</color>
     <color name="cor_primaria_pressed">#E9B60C</color>
     <color name="cor_primaria_desabilitado">#FFEBA1</color>

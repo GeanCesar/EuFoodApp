@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -31,6 +32,8 @@ import br.com.geancesar.eufood.telas.cardapio.model.CategoriaSubItemRest;
 import br.com.geancesar.eufood.telas.cardapio.model.ItemCardapio;
 import br.com.geancesar.eufood.telas.cardapio.requests.ListarCategoriasSubItensTask;
 import br.com.geancesar.eufood.telas.cardapio.requests.model.RespostaListarCategoriasSubitem;
+import br.com.geancesar.eufood.telas.pedido.model.CriacaoPedidoItemRest;
+import br.com.geancesar.eufood.telas.pedido.model.CriacaoPedidoSubItemRest;
 import br.com.geancesar.eufood.util.AccountManagerUtil;
 import br.com.geancesar.uicomponents.componentes.NumberSelector;
 import br.com.geancesar.uicomponents.componentes.ValueButton;
@@ -93,9 +96,44 @@ public class DetalheItemFragment extends Fragment implements DetalheItemListener
         atualizaTextoBotao();
         llRecolher.setOnClickListener(l -> listener.fecharDetalheItem());
 
+        btAdicionar.setOnClickListener(l -> {
+            if(listener != null) {
+                listener.adicionarItemSacola(montaItem());
+            }
+        });
+
         buscarCategorias();
 
         return view;
+    }
+
+    private CriacaoPedidoItemRest montaItem(){
+        CriacaoPedidoItemRest itemRest = new CriacaoPedidoItemRest();
+        itemRest.setQuantidade(BigDecimal.valueOf(nsQuantidade.getValor()));
+        itemRest.setUuid(item.getUuid());
+        itemRest.setPreco(item.getValor());
+        itemRest.setValorTotal(btAdicionar.getValor());
+        itemRest.setSubItems(new ArrayList<>());
+        itemRest.setDescricao(item.getDescricao());
+        itemRest.setNome(item.getNome());
+        itemRest.setImagemBaixada(item.getImagemBaixada());
+
+        if(itensCategoria != null) {
+            for(CategoriaSubItemRest categoria : itensCategoria) {
+                for(ItemCardapio sub : categoria.getItens()){
+                    if(sub.getQuantidadeSelecionada() > 0) {
+                        CriacaoPedidoSubItemRest subitem = new CriacaoPedidoSubItemRest();
+                        subitem.setUuid(sub.getUuid());
+                        subitem.setQuantidade(BigDecimal.valueOf(sub.getQuantidadeSelecionada()));
+                        subitem.setValorTotal(sub.getValor().multiply(BigDecimal.valueOf(sub.getQuantidadeSelecionada())));
+                        subitem.setNome(sub.getNome());
+                        itemRest.getSubItems().add(subitem);
+                    }
+                }
+            }
+        }
+
+        return itemRest;
     }
 
     /**
