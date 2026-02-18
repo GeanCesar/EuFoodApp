@@ -45,7 +45,8 @@
                 android:ellipsize="end"
                 android:maxLines="2"
                 android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum est libero, rhoncus et accumsan nec, malesuada dignissim est. Nullam elementum efficitur turpis, a tristique justo consequat nec. Donec malesuada tellus et odio hendrerit, non feugiat ipsum laoreet. Mauris condimentum, sapien vitae ultrices bibendum, enim eros aliquet velit, ac tempor orci massa vitae felis. Morbi ac magna in leo tristique efficitur. Suspendisse consequat nibh in mauris pulvinar tristique."
-                android:textColor="@color/cor_texto" />
+                android:textColor="@color/cor_texto"
+                android:textSize="13sp" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -96,9 +97,17 @@
                 android:layout_height="40dp"
                 android:layout_alignParentTop="false"
                 android:layout_alignParentBottom="false"
-                app:valor="0"></br.com.geancesar.uicomponents.componentes.NumberSelector>
+                app:valor="0"/>
 
         </RelativeLayout>
+
+        <br.com.geancesar.uicomponents.componentes.CheckSelect
+            android:id="@+id/csCheck"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            app:checked_check_select="true"
+            app:tint_check_select="@color/cor_secundaria"/>
 
     </LinearLayout>
 

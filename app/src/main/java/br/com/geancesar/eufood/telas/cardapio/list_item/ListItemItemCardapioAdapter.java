@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.load.model.LazyHeaders;
@@ -69,6 +70,7 @@ public class ListItemItemCardapioAdapter extends RecyclerView.Adapter<ListItemIt
         Glide
                 .with(inflater.getContext())
                 .load(glideUrl)
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .addListener(new RequestListener<>() {
                     @Override
                     public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {

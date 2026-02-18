@@ -139,6 +139,7 @@ public class MainActivity extends AppCompatActivity implements LoginUsuarioListe
 
         Intent intent = new Intent(this, PrincipalActivity.class);
         startActivity(intent);
+        finish();
     }
 
     public void efetuarCadastro() {
