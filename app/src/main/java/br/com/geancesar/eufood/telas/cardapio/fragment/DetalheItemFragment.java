@@ -31,7 +31,6 @@ import br.com.geancesar.eufood.telas.cardapio.listener.RestauranteListener;
 import br.com.geancesar.eufood.telas.cardapio.model.CategoriaSubItemRest;
 import br.com.geancesar.eufood.telas.cardapio.model.ItemCardapio;
 import br.com.geancesar.eufood.telas.cardapio.requests.ListarCategoriasSubItensTask;
-import br.com.geancesar.eufood.telas.cardapio.requests.model.RespostaListarCategoriasSubitem;
 import br.com.geancesar.eufood.telas.pedido.model.CriacaoPedidoItemRest;
 import br.com.geancesar.eufood.telas.pedido.model.CriacaoPedidoSubItemRest;
 import br.com.geancesar.eufood.util.AccountManagerUtil;
@@ -202,7 +201,7 @@ public class DetalheItemFragment extends Fragment implements DetalheItemListener
         try (ExecutorService executor = Executors.newSingleThreadExecutor()) {
             Handler handler = new Handler(Looper.getMainLooper());
             executor.execute(() -> {
-                RespostaListarCategoriasSubitem resp = task.executa();
+                List<CategoriaSubItemRest> resp = task.executa();
                 handler.post(() -> task.posExecucao(resp));
             });
         }
