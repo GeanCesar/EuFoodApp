@@ -1,13 +1,14 @@
 package br.com.geancesar.eufood.telas.cardapio.requests;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.util.List;
 
 import br.com.geancesar.eufood.telas.cardapio.listener.DetalheItemListener;
 import br.com.geancesar.eufood.telas.cardapio.model.CategoriaSubItemRest;
-import br.com.geancesar.eufood.telas.cardapio.requests.model.RespostaListarCategoriasSubitem;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -28,7 +29,7 @@ public class ListarCategoriasSubItensTask {
         this.listener = listener;
     }
 
-    public RespostaListarCategoriasSubitem executa() {
+    public List<CategoriaSubItemRest> executa() {
         url = url.replace("{uuid}", uuidRestaurante);
         url = url.replace("{uuid-item}", uuidItem);
 
@@ -38,28 +39,20 @@ public class ListarCategoriasSubItensTask {
                 .addHeader("Authorization", "Bearer " + tokenUsuario)
                 .build();
         try (Response response = client.newCall(request).execute()) {
-            if(response.code() == 302) {
+            if(response.code() == 200) {
                 Gson gson = new Gson();
-                return gson.fromJson(response.body().string(), RespostaListarCategoriasSubitem.class);
-            } else {
-                RespostaListarCategoriasSubitem resp = new RespostaListarCategoriasSubitem();
-                resp.setOk(false);
-                return resp;
+                Type listType = new TypeToken<List<CategoriaSubItemRest>>() {}.getType();
+                return gson.fromJson(response.body().string(), listType);
             }
         } catch (IOException e) {
-            RespostaListarCategoriasSubitem resp = new RespostaListarCategoriasSubitem();
-            resp.setOk(false);
-            resp.setMensagem(e.getMessage());
-            return resp;
+            e.printStackTrace();;
         }
+        return null;
     }
 
-    public void posExecucao(RespostaListarCategoriasSubitem resp) {
+    public void posExecucao(List<CategoriaSubItemRest> resp) {
         if(resp != null) {
-            List<CategoriaSubItemRest> itens = resp.getExtra();
-            if(itens != null) {
-                listener.buscarCategoriaSubitem(itens);
-            }
+            listener.buscarCategoriaSubitem(resp);
         }
     }
 

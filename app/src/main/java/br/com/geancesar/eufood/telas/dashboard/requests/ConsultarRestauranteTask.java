@@ -3,12 +3,14 @@ package br.com.geancesar.eufood.telas.dashboard.requests;
 import android.os.AsyncTask;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import java.io.IOException;
+import java.lang.reflect.Type;
+import java.util.List;
 
 import br.com.geancesar.eufood.telas.dashboard.listener.PedidosListener;
 import br.com.geancesar.eufood.telas.dashboard.model.Restaurante;
-import br.com.geancesar.eufood.telas.dashboard.requests.model.RespostaConsultarRestaurante;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -29,12 +31,9 @@ public class ConsultarRestauranteTask extends AsyncTask {
 
     @Override
     protected void onPostExecute(Object o) {
-        RespostaConsultarRestaurante resp = (RespostaConsultarRestaurante) o;
+        Restaurante resp = (Restaurante) o;
         if(resp != null) {
-            Restaurante restaurate = resp.getExtra();
-            if(restaurate != null) {
-                listener.restauranteConsultado(restaurate);
-            }
+            listener.restauranteConsultado(resp);
         }
     }
 
@@ -47,20 +46,16 @@ public class ConsultarRestauranteTask extends AsyncTask {
                 .method("GET", null)
                 .build();
         try (Response response = client.newCall(request).execute()) {
-            if(response.code() == 302) {
+            if(response.code() == 200) {
                 Gson gson = new Gson();
-                RespostaConsultarRestaurante resp = gson.fromJson(response.body().string(), RespostaConsultarRestaurante.class);
-                return resp;
+
+                Type type = new TypeToken<Restaurante>() {}.getType();
+                return gson.fromJson(response.body().string(), type);
             } else {
-                RespostaConsultarRestaurante resp = new RespostaConsultarRestaurante();
-                resp.setOk(false);
-                return resp;
+                return null;
             }
         } catch (IOException e) {
-            RespostaConsultarRestaurante resp = new RespostaConsultarRestaurante();
-            resp.setOk(false);
-            resp.setMensagem(e.getMessage());
-            return resp;
+            return null;
         }
     }
 

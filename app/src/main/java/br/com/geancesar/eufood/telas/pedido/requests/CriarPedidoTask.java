@@ -6,7 +6,6 @@ import com.google.gson.Gson;
 
 import java.io.IOException;
 
-import br.com.geancesar.eufood.request.model.RespostaRequisicao;
 import br.com.geancesar.eufood.telas.pedido.listener.DetalhePedidoListener;
 import br.com.geancesar.eufood.telas.pedido.model.CriacaoPedidoRest;
 import okhttp3.MediaType;
@@ -16,11 +15,11 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class CriarPedidoTask extends AsyncTask {
-    private OkHttpClient client = new OkHttpClient();
-    private String url = "http://192.168.15.103:8080/pedido/criar";
-    private CriacaoPedidoRest pedido;
+    private final OkHttpClient client = new OkHttpClient();
+    private final String url = "http://192.168.15.103:8080/pedido/criar";
+    private final CriacaoPedidoRest pedido;
 
-    private String tokenUsuario;
+    private final String tokenUsuario;
 
     DetalhePedidoListener listener;
 
@@ -42,17 +41,12 @@ public class CriarPedidoTask extends AsyncTask {
                 .build();
         try (Response response = client.newCall(request).execute()) {
             if(response.code() == 201) {
-                return gson.fromJson(response.body().string(), RespostaRequisicao.class);
+                return response.body().string();
             } else {
-                RespostaRequisicao resp = new RespostaRequisicao();
-                resp.setOk(false);
-                return resp;
+               return null;
             }
         } catch (IOException e) {
-            RespostaRequisicao resp = new RespostaRequisicao();
-            resp.setOk(false);
-            resp.setMensagem(e.getMessage());
-            return resp;
+            return null;
         }
     }
 
@@ -60,8 +54,8 @@ public class CriarPedidoTask extends AsyncTask {
     protected void onPostExecute(Object o) {
         super.onPostExecute(o);
 
-        RespostaRequisicao resp = ((RespostaRequisicao) o);
-        if(resp.isOk() && listener != null) {
+        String resp = ((String) o);
+        if(resp != null && listener != null) {
             listener.pedidoCriado(pedido);
         }
     }

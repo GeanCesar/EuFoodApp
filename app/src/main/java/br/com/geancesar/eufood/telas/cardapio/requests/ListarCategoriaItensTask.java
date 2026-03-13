@@ -1,10 +1,13 @@
 package br.com.geancesar.eufood.telas.cardapio.requests;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import java.io.IOException;
+import java.lang.reflect.Type;
+import java.util.List;
 
-import br.com.geancesar.eufood.telas.cardapio.requests.model.RespostaListarCategorias;
+import br.com.geancesar.eufood.telas.cardapio.model.CategoriaItemCardapio;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -21,7 +24,7 @@ public class ListarCategoriaItensTask {
         this.tokenUsuario = tokenUsuario;
     }
 
-    public RespostaListarCategorias executa() {
+    public List<CategoriaItemCardapio> executa() {
         url = url.replace("{uuid}", uuidRestaurante);
         Request request = new Request.Builder()
                 .url(url)
@@ -29,20 +32,15 @@ public class ListarCategoriaItensTask {
                 .addHeader("Authorization", "Bearer " + tokenUsuario)
                 .build();
         try (Response response = client.newCall(request).execute()) {
-            if(response.code() == 302) {
+            if(response.code() == 200) {
                 Gson gson = new Gson();
-                return gson.fromJson(response.body().string(), RespostaListarCategorias.class);
-            } else {
-                RespostaListarCategorias resp = new RespostaListarCategorias();
-                resp.setOk(false);
-                return resp;
+                Type listType = new TypeToken<List<CategoriaItemCardapio>>() {}.getType();
+                return gson.fromJson(response.body().string(), listType);
             }
         } catch (IOException e) {
-            RespostaListarCategorias resp = new RespostaListarCategorias();
-            resp.setOk(false);
-            resp.setMensagem(e.getMessage());
-            return resp;
+            e.printStackTrace();
         }
+        return null;
     }
 
 }

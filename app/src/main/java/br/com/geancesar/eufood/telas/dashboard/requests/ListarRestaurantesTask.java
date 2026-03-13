@@ -1,13 +1,14 @@
 package br.com.geancesar.eufood.telas.dashboard.requests;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.util.List;
 
 import br.com.geancesar.eufood.telas.dashboard.listener.DashboardListener;
 import br.com.geancesar.eufood.telas.dashboard.model.Restaurante;
-import br.com.geancesar.eufood.telas.dashboard.requests.model.RespostaListarRestaurantes;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -33,39 +34,32 @@ public class ListarRestaurantesTask   {
     /**
      * @return
      */
-    public RespostaListarRestaurantes executa() {
+    public List<Restaurante> executa() {
         Request request = new Request.Builder()
                 .url(url)
                 .addHeader("Authorization", "Bearer " + tokenUsuario)
                 .method("GET", null)
                 .build();
         try (Response response = client.newCall(request).execute()) {
-            if(response.code() == 302) {
+            if(response.code() == 200) {
                 Gson gson = new Gson();
-                RespostaListarRestaurantes resp = gson.fromJson(response.body().string(), RespostaListarRestaurantes.class);
+                Type listType = new TypeToken<List<Restaurante>>() {}.getType();
+                List<Restaurante> resp = gson.fromJson(response.body().string(), listType);
                 return resp;
             } else {
-                RespostaListarRestaurantes resp = new RespostaListarRestaurantes();
-                resp.setOk(false);
-                return resp;
+                return null;
             }
         } catch (IOException e) {
-            RespostaListarRestaurantes resp = new RespostaListarRestaurantes();
-            resp.setOk(false);
-            resp.setMensagem(e.getMessage());
-            return resp;
+            return null;
         }
     }
 
     /**
      * @param resp
      */
-    public void posExecucao(RespostaListarRestaurantes resp) {
+    public void posExecucao(List<Restaurante> resp) {
         if(resp != null) {
-            List<Restaurante> restaurates = resp.getExtra();
-            if(restaurates != null) {
-                listener.listaRestaurantes(restaurates);
-            }
+            listener.listaRestaurantes(resp);
         }
     }
 

@@ -29,7 +29,6 @@ import br.com.geancesar.eufood.telas.dashboard.list_item.ListItemRestauranteAdap
 import br.com.geancesar.eufood.telas.dashboard.listener.DashboardListener;
 import br.com.geancesar.eufood.telas.dashboard.model.Restaurante;
 import br.com.geancesar.eufood.telas.dashboard.requests.ListarRestaurantesTask;
-import br.com.geancesar.eufood.telas.dashboard.requests.model.RespostaListarRestaurantes;
 import br.com.geancesar.eufood.util.AccountManagerUtil;
 
 public class RestaurantesFragment extends Fragment implements DashboardListener{
@@ -84,7 +83,7 @@ public class RestaurantesFragment extends Fragment implements DashboardListener{
         try (ExecutorService executor = Executors.newSingleThreadExecutor()) {
             Handler handler = new Handler(Looper.getMainLooper());
             executor.execute(() -> {
-                RespostaListarRestaurantes resp = task.executa();
+                List<Restaurante> resp = task.executa();
                 handler.post(() -> task.posExecucao(resp));
             });
         }

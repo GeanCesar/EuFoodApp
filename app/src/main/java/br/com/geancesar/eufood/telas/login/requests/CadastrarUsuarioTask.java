@@ -10,7 +10,6 @@ import java.io.IOException;
 
 import br.com.geancesar.eufood.telas.login.listener.LoginUsuarioListener;
 import br.com.geancesar.eufood.telas.login.model.Usuario;
-import br.com.geancesar.eufood.request.model.RespostaRequisicao;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -43,15 +42,9 @@ public class CadastrarUsuarioTask extends AsyncTask  {
                 .post(body)
                 .build();
         try (Response response = client.newCall(request).execute()) {
-            RespostaRequisicao resp = new RespostaRequisicao();
-            resp.setOk(response.code() == 201);
-            resp.setMensagem(response.body().string());
-            return resp;
+            return response.body().string();
         } catch (IOException e) {
-            RespostaRequisicao resp = new RespostaRequisicao();
-            resp.setOk(false);
-            resp.setMensagem(e.getMessage());
-            return resp;
+            return null;
         }
     }
 
@@ -60,9 +53,9 @@ public class CadastrarUsuarioTask extends AsyncTask  {
         super.onPostExecute(o);
         dialog.dismiss();
 
-        RespostaRequisicao resp = (RespostaRequisicao) o;
-        if(!resp.isOk()) {
-            Toast.makeText(dialog.getContext(), resp.getMensagem(), Toast.LENGTH_SHORT).show();
+        String resp = (String) o;
+        if(resp != null && !resp.isEmpty()) {
+            Toast.makeText(dialog.getContext(), resp, Toast.LENGTH_SHORT).show();
         } else {
             listener.cadastradoSucesso(resp);
         }

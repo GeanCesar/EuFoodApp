@@ -18,7 +18,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import br.com.geancesar.eufood.databinding.ActivityMainBinding;
-import br.com.geancesar.eufood.request.model.RespostaRequisicao;
 import br.com.geancesar.eufood.telas.dashboard.PrincipalActivity;
 import br.com.geancesar.eufood.telas.login.fragments.CelularFragment;
 import br.com.geancesar.eufood.telas.login.fragments.NomeUsuarioFragment;
@@ -118,13 +117,13 @@ public class MainActivity extends AppCompatActivity implements LoginUsuarioListe
     }
 
     @Override
-    public void cadastradoSucesso(RespostaRequisicao respostaRequisicao) {
+    public void cadastradoSucesso(String respostaRequisicao) {
         Toast.makeText(this, "Cadastrado com sucesso!", Toast.LENGTH_LONG).show();
         efetuarLogin();
     }
 
     @Override
-    public void logadoSucesso(RespostaRequisicao respostaRequisicao) {
+    public void logadoSucesso(String token) {
         AccountManager manager = AccountManager.get(this);
 
         Account conta = null;
@@ -135,7 +134,7 @@ public class MainActivity extends AppCompatActivity implements LoginUsuarioListe
         }
 
         manager.addAccountExplicitly(conta, usuarioCadastro.getSenha(), null);
-        manager.setAuthToken(conta, "token", (String) respostaRequisicao.getExtra());
+        manager.setAuthToken(conta, "token", token);
 
         Intent intent = new Intent(this, PrincipalActivity.class);
         startActivity(intent);
@@ -157,7 +156,7 @@ public class MainActivity extends AppCompatActivity implements LoginUsuarioListe
             Handler handler = new Handler(Looper.getMainLooper());
 
             executor.execute(() -> {
-                RespostaRequisicao resp = task.executa();
+                String resp = task.executa();
                 handler.post(() -> task.posExecucao(resp));
             });
         }

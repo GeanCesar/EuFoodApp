@@ -9,7 +9,6 @@ import com.google.gson.Gson;
 
 import java.io.IOException;
 
-import br.com.geancesar.eufood.request.model.RespostaRequisicao;
 import br.com.geancesar.eufood.telas.login.listener.LoginUsuarioListener;
 import br.com.geancesar.eufood.telas.login.model.Usuario;
 import okhttp3.MediaType;
@@ -50,9 +49,7 @@ public class ConsultarCelularUsuarioTask extends AsyncTask  {
                 .method("POST", body)
                 .build();
         try (Response response = client.newCall(request).execute()) {
-            gson = new Gson();
-            RespostaRequisicao resp = gson.fromJson(response.body().string(), RespostaRequisicao.class);
-            return resp;
+            return response.body().string();
         } catch (IOException e) {
             return null;
         }
@@ -62,23 +59,21 @@ public class ConsultarCelularUsuarioTask extends AsyncTask  {
     protected void onPostExecute(Object o) {
         super.onPostExecute(o);
         dialog.dismiss();
+        String response = (String) o;
 
-        if(o != null) {
-            RespostaRequisicao response = (RespostaRequisicao) o;
-
-            if(!response.isOk()) {
-                if(logar){
-                    Toast.makeText(context, "Telefone não localizado", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                listener.cadastrar(usuario.getTelefone());
-            } else {
-                if(logar) {
-                    listener.logar(usuario.getTelefone());
-                    return;
-                }
-                Toast.makeText(context, "Telefone já útilizado", Toast.LENGTH_SHORT).show();
+        if(response != null) {
+            if(logar){
+                Toast.makeText(context, "Telefone não localizado", Toast.LENGTH_SHORT).show();
+                return;
             }
+            listener.cadastrar(usuario.getTelefone());
+        } else {
+            if(logar) {
+                listener.logar(usuario.getTelefone());
+                return;
+            }
+            Toast.makeText(context, "Telefone já útilizado", Toast.LENGTH_SHORT).show();
         }
+
     }
 }

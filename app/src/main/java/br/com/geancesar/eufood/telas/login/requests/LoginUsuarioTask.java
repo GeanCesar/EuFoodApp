@@ -7,7 +7,6 @@ import com.google.gson.Gson;
 
 import java.io.IOException;
 
-import br.com.geancesar.eufood.request.model.RespostaRequisicao;
 import br.com.geancesar.eufood.telas.login.listener.LoginUsuarioListener;
 import br.com.geancesar.eufood.telas.login.model.Usuario;
 import okhttp3.MediaType;
@@ -37,23 +36,21 @@ public class LoginUsuarioTask  {
         this.listener = listener;
     }
 
-    public RespostaRequisicao executa() {
+    public String executa() {
         RequestBody body = RequestBody.create(json, mediaType);
         Request request = new Request.Builder()
                 .url(url)
                 .post(body)
                 .build();
         try (Response response = client.newCall(request).execute()) {
-            Gson gson = new Gson();
-            return gson.fromJson(response.body().string(), RespostaRequisicao.class);
+            return response.body().string();
         } catch (IOException e) {
             return null;
         }
     }
-
-    public void posExecucao(RespostaRequisicao resp) {
+    public void posExecucao(String resp) {
         dialog.dismiss();
-        if(resp == null || !resp.isOk()) {
+        if(resp == null || resp.isEmpty()) {
             Toast.makeText(dialog.getContext(), "Telefone / senha incorretos", Toast.LENGTH_SHORT).show();
         } else {
             listener.logadoSucesso(resp);

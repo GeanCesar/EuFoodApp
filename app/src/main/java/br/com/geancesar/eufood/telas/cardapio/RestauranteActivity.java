@@ -42,8 +42,6 @@ import br.com.geancesar.eufood.telas.cardapio.model.CategoriaItemCardapio;
 import br.com.geancesar.eufood.telas.cardapio.model.ItemCardapio;
 import br.com.geancesar.eufood.telas.cardapio.requests.ListarCategoriaItensTask;
 import br.com.geancesar.eufood.telas.cardapio.requests.ListarItensCardapioTask;
-import br.com.geancesar.eufood.telas.cardapio.requests.model.RespostaListarCategorias;
-import br.com.geancesar.eufood.telas.cardapio.requests.model.RespostaListarItensRestaurante;
 import br.com.geancesar.eufood.telas.dashboard.model.Restaurante;
 import br.com.geancesar.eufood.telas.pedido.fragment.DetalhePedidoFragment;
 import br.com.geancesar.eufood.telas.pedido.model.CriacaoPedidoItemRest;
@@ -172,7 +170,7 @@ public class RestauranteActivity extends AppCompatActivity implements Restaurant
         try (ExecutorService executor = Executors.newSingleThreadExecutor()) {
             Handler handler = new Handler(Looper.getMainLooper());
             executor.execute(() -> {
-                RespostaListarCategorias resp = task.executa();
+                List<CategoriaItemCardapio> resp = task.executa();
                 handler.post(() -> processaRespostaCategorias(resp));
             });
         }
@@ -183,16 +181,14 @@ public class RestauranteActivity extends AppCompatActivity implements Restaurant
         try (ExecutorService executor = Executors.newSingleThreadExecutor()) {
             Handler handler = new Handler(Looper.getMainLooper());
             executor.execute(() -> {
-                RespostaListarItensRestaurante resp = task.executa();
+                List<ItemCardapio> resp = task.executa();
                 handler.post(() -> task.posExecucao(resp));
             });
         }
     }
 
-    private void processaRespostaCategorias(RespostaListarCategorias resp) {
-        if(resp.isOk()) {
-            categorias.addAll(resp.getExtra());
-        }
+    private void processaRespostaCategorias(List<CategoriaItemCardapio> resp) {
+        categorias.addAll(resp);
 
         Map<CategoriaItemCardapio, List<ItemCardapio>> categoriasComItens =
                 itensCardapio.stream().collect(Collectors.groupingBy(ItemCardapio::getCategoria));

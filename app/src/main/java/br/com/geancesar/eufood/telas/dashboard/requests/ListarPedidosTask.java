@@ -3,13 +3,15 @@ package br.com.geancesar.eufood.telas.dashboard.requests;
 import android.os.AsyncTask;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.util.List;
 
 import br.com.geancesar.eufood.telas.dashboard.listener.PedidosListener;
+import br.com.geancesar.eufood.telas.dashboard.model.Restaurante;
 import br.com.geancesar.eufood.telas.dashboard.model.rest.ConsultaPedidoRest;
-import br.com.geancesar.eufood.telas.dashboard.requests.model.RespostaListarPedidos;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -35,28 +37,23 @@ public class ListarPedidosTask extends AsyncTask {
                 .method("GET", null)
                 .build();
         try (Response response = client.newCall(request).execute()) {
-            if(response.code() == 302) {
+            if(response.code() == 200) {
                 Gson gson = new Gson();
-                RespostaListarPedidos resp = gson.fromJson(response.body().string(), RespostaListarPedidos.class);
-                return resp;
+
+                Type type = new TypeToken<List<ConsultaPedidoRest>>() {}.getType();
+                return gson.fromJson(response.body().string(), type);
             } else {
-                RespostaListarPedidos resp = new RespostaListarPedidos();
-                resp.setOk(false);
-                return resp;
+               return null;
             }
         } catch (IOException e) {
-            RespostaListarPedidos resp = new RespostaListarPedidos();
-            resp.setOk(false);
-            resp.setMensagem(e.getMessage());
-            return resp;
+            return null;
         }
     }
 
     @Override
     protected void onPostExecute(Object o) {
-        RespostaListarPedidos resp = (RespostaListarPedidos) o;
-        if(resp != null) {
-            List<ConsultaPedidoRest> pedidos = resp.getExtra();
+        if(o != null) {
+            List<ConsultaPedidoRest> pedidos =  (List<ConsultaPedidoRest>) o;
             if(pedidos != null) {
                 listener.pedidosConsultados(pedidos);
             }

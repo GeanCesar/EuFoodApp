@@ -1,13 +1,14 @@
 package br.com.geancesar.eufood.telas.cardapio.requests;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.util.List;
 
 import br.com.geancesar.eufood.telas.cardapio.listener.RestauranteListener;
 import br.com.geancesar.eufood.telas.cardapio.model.ItemCardapio;
-import br.com.geancesar.eufood.telas.cardapio.requests.model.RespostaListarItensRestaurante;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -28,7 +29,7 @@ public class ListarItensCardapioTask {
         this.tokenUsuario = tokenUsuario;
     }
 
-    public RespostaListarItensRestaurante executa() {
+    public List<ItemCardapio> executa() {
         url = url.replace("{uuid-restaurante}", uuidRestaurante);
         Request request = new Request.Builder()
                 .url(url)
@@ -36,28 +37,21 @@ public class ListarItensCardapioTask {
                 .addHeader("Authorization", "Bearer " + tokenUsuario)
                 .build();
         try (Response response = client.newCall(request).execute()) {
-            if(response.code() == 302) {
+            if(response.code() == 200) {
                 Gson gson = new Gson();
-                return gson.fromJson(response.body().string(), RespostaListarItensRestaurante.class);
+                Type listType = new TypeToken<List<ItemCardapio>>() {}.getType();
+                return gson.fromJson(response.body().string(), listType);
             } else {
-                RespostaListarItensRestaurante resp = new RespostaListarItensRestaurante();
-                resp.setOk(false);
-                return resp;
+                return null;
             }
         } catch (IOException e) {
-            RespostaListarItensRestaurante resp = new RespostaListarItensRestaurante();
-            resp.setOk(false);
-            resp.setMensagem(e.getMessage());
-            return resp;
+            return null;
         }
     }
 
-    public void posExecucao(RespostaListarItensRestaurante resp) {
+    public void posExecucao(List<ItemCardapio> resp) {
         if(resp != null) {
-            List<ItemCardapio> itens = resp.getExtra();
-            if(itens != null) {
-                listener.listaItens(itens);
-            }
+            listener.listaItens(resp);
         }
     }
 }
