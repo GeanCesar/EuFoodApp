@@ -17,6 +17,8 @@ public class ConsultaPedidoRest {
 	private BigDecimal valorTotal;
 	private BigDecimal valorFrete;
 	private Date dataCriacao;
+    private String numeroPedido;
+    private List<ConsultaPedidoStatusRest> status;
     @Transient
     private transient String nomeRestaurante;
     @Transient
@@ -77,6 +79,22 @@ public class ConsultaPedidoRest {
 	public void setDataCriacao(Date dataCriacao) {
 		this.dataCriacao = dataCriacao;
 	}
+
+    public List<ConsultaPedidoStatusRest> getStatus() {
+        return status;
+    }
+
+    public void setStatus(List<ConsultaPedidoStatusRest> status) {
+        this.status = status;
+    }
+
+    public String getNumeroPedido() {
+        return numeroPedido;
+    }
+
+    public void setNumeroPedido(String numeroPedido) {
+        this.numeroPedido = numeroPedido;
+    }
 
     public String getNomeRestaurante() {
         return nomeRestaurante;

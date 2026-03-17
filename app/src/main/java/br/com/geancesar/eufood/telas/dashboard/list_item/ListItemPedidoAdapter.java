@@ -55,6 +55,8 @@ public class ListItemPedidoAdapter extends RecyclerView.Adapter<ListItemPedidoAd
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.tvDataPedido.setText(Util.getInstance().formataData(pedidos.get(position).getDataCriacao()));
         holder.tvValorTotal.setText(Util.getInstance().formataMoeda(pedidos.get(position).getValorTotal()));
+        holder.tvNumeroPedido.setText("Pedido #" + pedidos.get(position).getNumeroPedido());
+        holder.tvStatus.setText("Pedido " + pedidos.get(position).getStatus().get(0).getStatus().toLowerCase());
 
         GlideUrl glideUrl = new GlideUrl("http://192.168.15.103:8080/restaurante/imagem_perfil?uuid-restaurante=" + pedidos.get(position).getUuidRestaurante(), new LazyHeaders.Builder()
                 .addHeader("Authorization", "Bearer " + AccountManagerUtil.getInstance().getToken(context))
@@ -103,6 +105,7 @@ public class ListItemPedidoAdapter extends RecyclerView.Adapter<ListItemPedidoAd
         TextView tvStatus;
         TextView tvDataPedido;
         TextView tvValorTotal;
+        TextView tvNumeroPedido;
         ImageView ivIconeRestaurante;
 
         ViewHolder(View itemView) {
@@ -111,6 +114,7 @@ public class ListItemPedidoAdapter extends RecyclerView.Adapter<ListItemPedidoAd
             tvStatus = itemView.findViewById(R.id.tvStatusPedido);
             tvDataPedido = itemView.findViewById(R.id.tvDataPedido);
             tvValorTotal = itemView.findViewById(R.id.tvValorTotalPedido);
+            tvNumeroPedido = itemView.findViewById(R.id.tvNumeroPedido);
             ivIconeRestaurante = itemView.findViewById(R.id.ivIconeRestaurantePedido);
             itemView.setOnClickListener(this);
         }
