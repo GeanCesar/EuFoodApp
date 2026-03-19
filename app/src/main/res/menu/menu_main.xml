@@ -10,7 +10,7 @@
         android:title="@string/pedidos"/>
 
     <item
-        android:id="@+id/mi_conta"
-        android:icon="@drawable/ic_icon_account"
-        android:title="@string/conta"/>
+        android:id="@+id/mi_sair"
+        android:icon="@drawable/ic_exit"
+        android:title="@string/sair"/>
 </menu>

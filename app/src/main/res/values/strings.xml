@@ -10,5 +10,6 @@
     <string name="inicio">Início</string>
     <string name="buscar">Buscar</string>
     <string name="pedidos">Pedidos</string>
+    <string name="sair">Sair</string>
     <string name="conta">Conta</string>
 </resources>

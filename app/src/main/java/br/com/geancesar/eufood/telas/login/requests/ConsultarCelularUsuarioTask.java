@@ -61,18 +61,18 @@ public class ConsultarCelularUsuarioTask extends AsyncTask  {
         dialog.dismiss();
         String response = (String) o;
 
-        if(response != null) {
+        if(response != null && response.isEmpty()) {
             if(logar){
-                Toast.makeText(context, "Telefone não localizado", Toast.LENGTH_SHORT).show();
-                return;
+                listener.logar(usuario.getTelefone());
+            } else {
+                listener.cadastrar(usuario.getTelefone());
             }
-            listener.cadastrar(usuario.getTelefone());
         } else {
             if(logar) {
-                listener.logar(usuario.getTelefone());
-                return;
+                Toast.makeText(context, "Telefone não localizado", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(context, "Telefone já útilizado", Toast.LENGTH_SHORT).show();
             }
-            Toast.makeText(context, "Telefone já útilizado", Toast.LENGTH_SHORT).show();
         }
 
     }
